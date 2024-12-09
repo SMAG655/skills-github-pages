@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idées Cadeaux AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .results {
+            margin-top: 2rem;
+        }
+        .result-item {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Idées Cadeaux avec AI</h1>
+        <p>Obtenez des suggestions personnalisées pour vos cadeaux !</p>
+    </header>
+
+    <div class="container">
+        <form id="giftForm">
+            <div class="form-group">
+                <label for="age">Tranche d'âge :</label>
+                <select id="age" required>
+                    <option value="">-- Choisissez une tranche d'âge --</option>
+                    <option value="enfant">Enfant</option>
+                    <option value="adolescent">Adolescent</option>
+                    <option value="adulte">Adulte</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="interest">Centres d'intérêt :</label>
+                <select id="interest" required>
+                    <option value="">-- Choisissez un intérêt --</option>
+                    <option value="sport">Sport</option>
+                    <option value="technologie">Technologie</option>
+                    <option value="art">Art</option>
+                    <option value="lecture">Lecture</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="budget">Budget (en €) :</label>
+                <input type="number" id="budget" placeholder="Entrez votre budget" min="1" required>
+            </div>
+
+            <button type="submit">Trouver un cadeau</button>
+        </form>
+
+        <div class="results" id="results">
+            <!-- Suggestions affichées ici -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('giftForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const age = document.getElementById('age').value;
+            const interest = document.getElementById('interest').value;
+            const budget = document.getElementById('budget').value;
+            const resultsDiv = document.getElementById('results');
+
+            resultsDiv.innerHTML = '<p>Recherche en cours...</p>';
+
+            // Simuler une API avec des résultats pertinents
+            const mockApi = async (age, interest, budget) => {
+                const suggestions = {
+                    sport: [
+                        { name: "Ballon de football", description: "Un ballon de qualité pour les passionnés de sport.", price: 20 },
+                        { name: "Montre fitness", description: "Suivez vos performances sportives avec style.", price: 50 },
+                        { name: "Abonnement à une salle de sport", description: "Idéal pour rester en forme.", price: 60 }
+                    ],
+                    technologie: [
+                        { name: "Montre connectée", description: "Idéal pour les amateurs de technologie.", price: 75 },
+                        { name: "Écouteurs sans fil", description: "Pour une expérience audio immersive.", price: 40 },
+                        { name: "Station de charge sans fil", description: "Pratique pour tous vos appareils.", price: 25 }
+                    ],
+                    art: [
+                        { name: "Kit de peinture", description: "Pour les passionnés d'art.", price: 20 },
+                        { name: "Carnet de croquis", description: "Parfait pour dessiner en déplacement.", price: 15 },
+                        { name: "Cours de dessin en ligne", description: "Apprenez de nouvelles techniques.", price: 50 }
+                    ],
+                    lecture: [
+                        { name: "Roman à succès", description: "Un livre captivant pour les amateurs de lecture.", price: 15 },
+                        { name: "Lampe de lecture", description: "Parfaite pour lire confortablement la nuit.", price: 20 },
+                        { name: "Abonnement à un service de livres numériques", description: "Des milliers de livres à portée de main.", price: 50 }
+                    ]
+                };
+                return suggestions[interest] || [];
+            };
+
+            try {
+                const suggestions = await mockApi(age, interest, budget);
+
+                resultsDiv.innerHTML = '<h2>Suggestions :</h2>';
+
+                suggestions
+                    .filter(item => item.price <= budget)
+                    .forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'result-item';
+                        div.innerHTML = `<strong>${item.name}</strong><br>${item.description}<br>Prix : ${item.price}€`;
+                        resultsDiv.appendChild(div);
+                    });
+
+                if (resultsDiv.children.length === 1) {
+                    resultsDiv.innerHTML += '<p>Aucune suggestion trouvée pour ce budget.</p>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = '<p>Erreur lors de la récupération des suggestions.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
